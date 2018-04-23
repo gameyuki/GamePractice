@@ -2,6 +2,12 @@
 #include<time.h>
 #include<Windows.h>
 
+//自作関数
+int ReturnRandom()
+{
+	return rand() % 100;
+}
+
 void main(void)
 {
 	//コンテニュー用
@@ -18,7 +24,7 @@ void main(void)
 
 		//敵の数字を乱数で決めている
 		srand((unsigned)time(NULL));
-		n1 = rand() % 100;
+		n1 = ReturnRandom();
 
 		printf("****************************************\n");
 		printf("* 今コンピュータが数字を１つ選びました *\n");
@@ -62,13 +68,22 @@ void main(void)
 		}
 
 		//何回目でクリアしたか
-		if (i <= 10)
+		if (i < 10)
 		{
-			printf("%d回目で当たり\n", i);
+			if (i <= 10)
+			{
+				printf("%d回目で当たり\n", i);
+			}
+			else
+			{
+				printf("アウト!!\n正解は%dでした\n", n1);
+			}
 		}
-		else
+
+		if (i == 10)
 		{
-			printf("アウト!!\n正解は%dでした\n", n1);
+			printf("バッドエンド！！！\n");
+			printf("正解は%dでした\n", n1);
 		}
 
 		//煽り文
@@ -119,4 +134,5 @@ void main(void)
 	} while (t == 0);
 
 	printf("バイバーイ\n");
+	getchar();
 }

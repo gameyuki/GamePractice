@@ -1,0 +1,15 @@
+¡‰ñg‚Á‚½•¶–@
+
+ŠÖ”
+do while•¶
+if•¶
+—”¶¬(srandŠÖ”)
+switch•¶
+
+
+atoiŠÖ”
+getcharŠÖ”
+get_sŠÖ”
+fflushŠÖ”
+systemŠÖ”
+scanfŠÖ”
