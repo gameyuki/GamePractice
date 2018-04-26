@@ -9,7 +9,7 @@ switch•¶
 
 atoiŠÖ”
 getcharŠÖ”
-get_sŠÖ”
+gets_sŠÖ”
 fflushŠÖ”
 systemŠÖ”
 scanfŠÖ”
