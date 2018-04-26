@@ -12,6 +12,7 @@ void main(void)
 {
 	//コンテニュー用
 	int t = -1;
+	bool ct = false;
 	char tc[128];
 
 	do
@@ -127,11 +128,20 @@ void main(void)
 		printf("Yes 0 : No 1\n");
 		gets_s(tc);
 		t = atoi(tc);
+		if (t == 0)
+		{
+			ct = true;
+		}
+		else
+		{
+			ct = false;
+		}
+		//t = atoi(tc);
 
 		//この関数でもいける
 		//scanf_s("%d",&t);
 
-	} while (t == 0);
+	} while (ct);
 
 	printf("バイバーイ\n");
 	getchar();
