@@ -1,14 +1,13 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<time.h>
+#include<string.h>
 
 //カードの枚数
 #define CARDNUMBER 52
 
-int g_Card = CARDNUMBER;
-
-//残数
-int Residue = 0;
+//改行
+#define PL printf("\n")
 
 //カードのマークの種類
 enum Mark
@@ -16,249 +15,196 @@ enum Mark
 	HEART,
 	DIA,
 	SPADES,
-	CLOVER
+	KURABU
 };
 
-struct State
+typedef struct
 {
+	int m_number;
+	Mark  m_Mark;
+}CARD;
+
+CARD g_Cards[52];
+
+//キャラクターのステータス
+struct CharState
+{
+	//名前
+	char m_Name[8];
 	//手札
-	int Hand[9];
+	int m_Hand[9];
 	//マーク
-	int Mark;
+	int m_Mark;
 	//合計数
-	int total;
+	int m_Total;
 	//カウント
-	int Count;
+	int m_Count;
 	//重複チェック用(カード)
-	int CardStack[10];
+	int m_CardStack[10];
 	//重複チェック用(マーク)
-	int MarkStack[10];
+	int m_MarkStack[10];
 	//A用変数
-	bool Acecheck;
+	bool m_AceCheck;
 };
 
-State g_Player = { NULL };
-State g_Enemy = { NULL };
+//今のカードの総数
+int g_Card = CARDNUMBER;
 
-void PlayerDraw()
+//グローバル変数
+CharState g_Player = { NULL };
+CharState g_Enemy = { NULL };
+
+//重複チェック全カード用
+int g_AllCardStack[53] = { NULL };
+int g_AllMarkStack[4] = { NULL };
+
+int g_Counter = 0;
+
+//カードドロー
+void Draw(CharState* _pcharacter)
 {
 	int r = 0;
-	int mark = 0;
+	int Mark = 0;
+	int i = 0;
 
 	while (1)
 	{
 		r = rand() % 13 + 1;
-		mark = rand() % 4;
+		Mark = rand() % 4;
 
-		g_Player.CardStack[g_Player.Count] = r;
-		g_Player.MarkStack[g_Player.Count] = mark;
+		//自分しか重複チェックできていない
+		_pcharacter->m_CardStack[_pcharacter->m_Count] = r;
+		_pcharacter->m_MarkStack[_pcharacter->m_Count] = Mark;
 
-		for (int i = 0; i < g_Player.Count; i++)
+		//g_AllCardStack[g_Counter] = r;
+		
+		//自分しか重複チェックできていない
+		////重複チェック
+		for (i = 0; i < _pcharacter->m_Count; i++)
 		{
-			if (g_Player.MarkStack[i] == mark)
+			if (_pcharacter->m_MarkStack[i] == Mark)
 			{
-				if (g_Player.CardStack[i] == r)
+				if (_pcharacter->m_CardStack[i] == r)
 				{
-					continue;
+					break;
 				}
 			}
 		}
 
-		if (r == 1)
-		{
-			g_Player.Acecheck = true;
-		}
+		//for (i = 0; i < g_Counter; i++)
+		//{
+		//	if (g_AllMarkStack[i] == Mark)
+		//	{
+		//		if (g_AllCardStack[i] == r)
+		//		{
+		//			break;
+		//		}
+		//	}
+		//}
 
-		if ((r > 10) || (r == 1))
+		if (i < _pcharacter->m_Count) continue;
+
+		//J,Q,Kは10とする
+		if (r > 10)
 		{
 			r = 10;
+		}
+
+		//Aは11
+		if (r == 1)
+		{
+			_pcharacter->m_AceCheck = true;
+			r = 11;
 		}
 
 		break;
 	}
 
-	g_Player.Hand[g_Player.Count] = r;
+	_pcharacter->m_Hand[_pcharacter->m_Count] = r;
 
-	switch (mark)
+	switch (Mark)
 	{
 	case HEART:
-		printf("自分がハートの%dを引きました。\n", g_Player.Hand[g_Player.Count]);
+		printf("%sはハートの%dを引きました。\n",_pcharacter->m_Name, _pcharacter->m_Hand[_pcharacter->m_Count]);
 		break;
 	case DIA:
-		printf("自分がダイヤの%dを引きました。\n", g_Player.Hand[g_Player.Count]);
+		printf("%sはダイヤの%dを引きました。\n", _pcharacter->m_Name, _pcharacter->m_Hand[_pcharacter->m_Count]);
 		break;
 	case SPADES:
-		printf("自分がスペードの%dを引きました。\n", g_Player.Hand[g_Player.Count]);
+		printf("%sはスペードの%dを引きました。\n", _pcharacter->m_Name, _pcharacter->m_Hand[_pcharacter->m_Count]);
 		break;
-	case CLOVER:
-		printf("自分がクローバーの%dを引きました。\n", g_Player.Hand[g_Player.Count]);
+	case KURABU:
+		printf("%sはクラブの%dを引きました。\n", _pcharacter->m_Name, _pcharacter->m_Hand[_pcharacter->m_Count]);
 		break;
 	default:
 		exit(1);
 		break;
 	}
 
+	//合計数
+	_pcharacter->m_Total += _pcharacter->m_Hand[_pcharacter->m_Count];
+	_pcharacter->m_Count++;
+	g_Counter++;
 	g_Card--;
 }
 
-void EnemyDraw()
+//手札の合計を見せる
+void PrintTotal(CharState* _chr)
 {
-	int r = 0;
-	int mark = 0;
-
-	while (1)
-	{
-		r = rand() % 13 + 1;
-		mark = rand() % 4;
-
-		g_Enemy.CardStack[g_Enemy.Count] = r;
-		g_Enemy.MarkStack[g_Enemy.Count] = mark;
-
-		for (int i = 0; i < g_Enemy.Count; i++)
-		{
-			if (g_Enemy.MarkStack[i] == mark)
-			{
-				if (g_Enemy.CardStack[i] == r)
-				{
-					continue;
-				}
-			}
-		}
-
-		if (r == 1)
-		{
-			g_Enemy.Acecheck = true;
-		}
-
-		if ((r > 10) || (r == 1))
-		{
-			r = 10;
-		}
-
-		break;
-	}
-
-	g_Enemy.Hand[g_Enemy.Count] = r;
-
-	switch (mark)
-	{
-	case HEART:
-		printf("敵がハートの%dを引きました。\n", g_Enemy.Hand[g_Enemy.Count]);
-		break;
-	case DIA:
-		printf("敵がダイヤの%dを引きました。\n", g_Enemy.Hand[g_Enemy.Count]);
-		break;
-	case SPADES:
-		printf("敵がスペードの%dを引きました。\n", g_Enemy.Hand[g_Enemy.Count]);
-		break;
-	case CLOVER:
-		printf("敵がクローバーの%dを引きました。\n", g_Enemy.Hand[g_Enemy.Count]);
-		break;
-	default:
-		exit(1);
-		break;
-	}
-
-	g_Card--;
+	printf("%sの手札の合計は%dです。\n", _chr->m_Name, _chr->m_Total);
 }
 
-void TotalDraw(State* _total,bool chr)
+//バーストチェック
+void CheckBurst(CharState* _pcharacter)
 {
-	if (chr)
+	bool Burst = false;
+
+	if (_pcharacter->m_Total > 21)
 	{
-		_total->total += _total->Hand[g_Player.Count];
-
-		printf("Playerの今の合計は%dです\n", _total->total);
-
-		g_Player.Count++;
-	}
-	else
-	{
-		_total->total += _total->Hand[g_Enemy.Count];
-
-		printf("Enemyの今の合計は%dです\n", _total->total);
-
-		g_Enemy.Count++;
-	}
-}
-
-bool TotalCheck(State* _total)
-{
-	if (_total->total > 21)
-	{
-		if (_total->Acecheck)
+		if (_pcharacter->m_AceCheck)
 		{
-			_total->total -= 9;
-			return true;
+			printf("Aがあります、11か1に変わります\n");
+			_pcharacter->m_Total -= 10;
+			PrintTotal(_pcharacter);
+			_pcharacter->m_AceCheck = false;
+			return;
 		}
 
-		return false;
-	}
-
-	return true;
-}
-
-void HandPrint()
-{
-	printf("\n");
-	printf("貴方の合計は%dです。\n", g_Player.total);
-	printf("敵の合計は%dです。\n", g_Enemy.total);
-	printf("\n");
-}
-
-//前準備
-void Prepara()
-{
-	printf("☆★☆★☆★☆★☆★　ブラックジャックへようこそ！　☆★☆★☆★☆★☆★☆★\n");
-	printf("ゲームを開始します\n");
-	printf("最初に二枚配られます\n");
-
-	PlayerDraw();
-	TotalDraw(&g_Player,true);
-	PlayerDraw();
-	TotalDraw(&g_Player, true);
-
-	if (!TotalCheck(&g_Player))
-	{
-		printf("gameover\n");
+		printf("バースト!!!\n");
+		printf("GameOver\n");
 		printf("\n");
-		printf("貴方の負けです\n");
-		getchar();
-		exit(1);
-	}
-
-	printf("\n");
-	EnemyDraw();
-	TotalDraw(&g_Enemy,false);
-	EnemyDraw();
-	TotalDraw(&g_Enemy, false);
-
-	if (!TotalCheck(&g_Enemy))
-	{
-		printf("gameclear\n");
-		printf("\n");
-		printf("敵の負けです\n");
+		printf("%sの負けです\n", _pcharacter->m_Name);
 		getchar();
 		exit(1);
 	}
 }
 
-int main(void)
+//手札公開
+void OpenHands(CharState* _chr)
 {
-	srand((unsigned int)time(NULL));
+	for (int i = 0; i < _chr->m_Count; i++)
+	{
+		printf("%d\t", _chr->m_Hand[i]);
+	}
+	printf("\n");
+}
+
+//Playerのターン
+void PlayerTurn()
+{
+
 	char c;
 
-	printf("\n");
-	Prepara();
-	HandPrint();
-
 	while (1)
 	{
-		printf("もう1枚引きますか?(y/n)\n");
-		gets_s(&c, 2);
+		printf("\nもう1枚引きますか?(y/n)\n");
+		scanf_s("%c", &c);
+		getchar();
+
+		//gets_s(&c ,1);
 		if (c == 'y')
 		{
-			PlayerDraw();
+			Draw(&g_Player);
 		}
 		else if (c == 'n')
 		{
@@ -269,81 +215,108 @@ int main(void)
 			continue;
 		}
 
-		TotalDraw(&g_Player, true);
+		PrintTotal(&g_Player);
 
-		if (!TotalCheck(&g_Player))
-		{
-			printf("gameover\n");
-			printf("\n");
-			printf("貴方の負けです\n");
-			getchar();
-			exit(1);
-		}
-
-		if (!TotalCheck(&g_Enemy))
-		{
-			printf("gameclear\n");
-			printf("\n");
-			printf("敵の負けです\n");
-			getchar();
-			exit(1);
-		}
+		CheckBurst(&g_Player);
 	}
 
-	//敵さんのターン
+}
+
+//敵さんのターン	
+void EnemyTurn()
+{
+	while (1)
 	{
-		while (1)
+		if (g_Enemy.m_Total > 17)
 		{
-			if (g_Enemy.total > 17)
-			{
-				break;
-			}
-			else if (g_Enemy.total <= 15)
-			{
-				EnemyDraw();
-				TotalDraw(&g_Enemy, false);
-			}
-			else
-			{
-				break;
-			}
+			break;
 		}
-
-		if (!TotalCheck(&g_Enemy))
+		else if (g_Enemy.m_Total <= 15)
 		{
-			printf("gameclear\n");
+			Draw(&g_Enemy);
 			printf("\n");
-			printf("敵の負けです\n");
-			getchar();
-			exit(1);
+			PrintTotal(&g_Enemy);
+		}
+		else
+		{
+			break;
 		}
 	}
+}
 
-	HandPrint();
+//前準備
+void Prepare()
+{
+	srand((unsigned)time(NULL));
+	printf("☆★☆★☆★☆★☆★　ブラックジャックへようこそ！　☆★☆★☆★☆★☆★☆★\n");
+	printf("名前を入力してください\n");
+	gets_s(g_Player.m_Name);
+	strcpy_s(g_Enemy.m_Name, "Enemy");
+	printf("ゲームを開始します\n");
+	printf("最初に二枚配られます\n");
+	printf("\n");
 
+	Draw(&g_Player);
+	Draw(&g_Player);
+	PrintTotal(&g_Player);
+
+	CheckBurst(&g_Player);
+
+	printf("\n");
+	Draw(&g_Enemy);
+	Draw(&g_Enemy);
+	PrintTotal(&g_Enemy);
+	printf("\n");
+
+	CheckBurst(&g_Enemy);
+
+	PrintTotal(&g_Player);
+	PrintTotal(&g_Enemy);
+}
+
+//勝負処理
+void Battle()
+{
 	//勝負
 	while (1)
 	{
-		if (g_Player.total == g_Enemy.total)
+		if (g_Player.m_Total == g_Enemy.m_Total)
 		{
-			printf("引き分け\n");
+			printf("\n引き分け\n");
 			getchar();
 			exit(1);
 		}
-		else if(g_Player.total < g_Enemy.total)
+		else if (g_Player.m_Total < g_Enemy.m_Total)
 		{
-			printf("敵の勝ちです!\n");
+			printf("\n敵の勝ちです!\n");
 			getchar();
 			exit(1);
 		}
-		else if(g_Player.total > g_Enemy.total)
+		else if (g_Player.m_Total > g_Enemy.m_Total)
 		{
 			printf("勝利！\n");
-			printf("貴方の勝ちです!\n");
+			printf("\n貴方の勝ちです!\n");
 			getchar();
 			exit(1);
 		}
 	}
+}
+
+int main(void)
+{
+	char c;
+	printf("\n");
+	Prepare();
+
+	PlayerTurn();
+	EnemyTurn();
+
+	CheckBurst(&g_Enemy);
+
+	PrintTotal(&g_Player);
+	PrintTotal(&g_Enemy);
+
+	Battle();
 
 	while (1);
 }
