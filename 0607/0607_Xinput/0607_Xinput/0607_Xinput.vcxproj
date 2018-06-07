@@ -20,8 +20,8 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{83E2BFDB-0707-435E-A776-E939ADD7EA88}</ProjectGuid>
-    <RootNamespace>CollisionTest0531</RootNamespace>
+    <ProjectGuid>{D6B5847B-8001-4B7F-A09F-E6B3A38D91BB}</ProjectGuid>
+    <RootNamespace>My0607Xinput</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -76,7 +76,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(DXSDK_DIR)Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -88,7 +88,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(DXSDK_DIR)Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib/x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -102,7 +102,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(DXSDK_DIR)Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -118,7 +118,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir);$(DXSDK_DIR)Include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(DXSDK_DIR)Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -127,30 +127,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Application\Application.cpp" />
-    <ClCompile Include="Application\BackGround\BackGround.cpp" />
-    <ClCompile Include="Application\Collision\Collision.cpp" />
-    <ClCompile Include="Application\Enemy\Enemy.cpp" />
-    <ClCompile Include="Application\HANABI\Hanabi.cpp" />
-    <ClCompile Include="Application\Player\Player.cpp" />
-    <ClCompile Include="Lib\DirectInput\DirectInput.cpp" />
-    <ClCompile Include="Lib\Input\Input.cpp" />
-    <ClCompile Include="Lib\Math\Math.cpp" />
-    <ClCompile Include="Lib\Render\Render.cpp" />
-    <ClCompile Include="Main\Main.cpp" />
+    <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BackGround.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Render.cpp" />
+    <ClCompile Include="XinputDevice.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Application\Application.h" />
-    <ClInclude Include="Application\BackGround\BackGround.h" />
-    <ClInclude Include="Application\Collision\Collision.h" />
-    <ClInclude Include="Application\Enemy\Enemy.h" />
-    <ClInclude Include="Application\HANABI\Hanabi.h" />
-    <ClInclude Include="Application\Player\Player.h" />
-    <ClInclude Include="Lib\DirectInput\DirectInput.h" />
-    <ClInclude Include="Lib\Input\Input.h" />
-    <ClInclude Include="Lib\Math\Math.h" />
-    <ClInclude Include="Lib\Render\Render.h" />
-    <ClInclude Include="Main\Main.h" />
+    <ClInclude Include="Application.h" />
+    <ClInclude Include="BackGround.h" />
+    <ClInclude Include="Main.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="Render.h" />
+    <ClInclude Include="XinputDevice.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

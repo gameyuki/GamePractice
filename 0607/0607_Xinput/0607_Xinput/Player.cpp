@@ -1,7 +1,7 @@
-#include"Main\Main.h"
-#include"Lib\Render\Render.h"
-#include"Lib\DirectInput\DirectInput.h"
-#include<dinput.h>
+#include"Main.h"
+#include"Render.h"
+#include"XinputDevice.h"
+#include<XInput.h>
 
 CUSTOMVERTEX g_Player[]
 {
@@ -15,17 +15,20 @@ void PlayerDraw()
 {
 	g_pD3Device->SetTexture(0, g_pTexture[PLAYER_TEX]);
 	g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, g_Player, sizeof(CUSTOMVERTEX));
-
 }
 
 void PlayerControl()
 {
-	KEYSTATE key[256];
-	KeyCheckDinput(&key[DIK_SPACE], DIK_SPACE);
-	KeyCheckDinput(&key[DIK_RIGHT], DIK_RIGHT);
-	KeyCheckDinput(&key[DIK_LEFT], DIK_LEFT);
+	Getcontrolle();
+	checkbuttomstate(XINPUT_GAMEPAD_A, buttomA);
+	checkbuttomstate(XINPUT_GAMEPAD_B, buttomB);
+	checkbuttomstate(XINPUT_GAMEPAD_X, buttomX);
+	checkbuttomstate(XINPUT_GAMEPAD_Y, buttomY);
+	checkbuttomstate(XINPUT_GAMEPAD_START, buttomstart);
+	checkbuttomstate(XINPUT_GAMEPAD_LEFT_SHOULDER, buttomLB);
+	checkbuttomstate(XINPUT_GAMEPAD_RIGHT_SHOULDER, buttomRB);
 
-	if (key[DIK_RIGHT] == ON)
+	if (GetLanalog(ANALOGRIGHT))
 	{
 		for (int i = 0; i < 4; i++)
 		{
@@ -33,12 +36,11 @@ void PlayerControl()
 		}
 	}
 
-	if (key[DIK_LEFT] == ON)
+	if (GetLanalog(ANALOGLEFT))
 	{
 		for (int i = 0; i < 4; i++)
 		{
 			g_Player[i].x -= 5.f;
 		}
 	}
-
 }

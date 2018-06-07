@@ -1,6 +1,6 @@
 #include<Windows.h>
 #include<d3dx9.h>
-#include"Main\Main.h"
+#include"Main.h"
 
 void SetTexture()
 {
@@ -41,8 +41,6 @@ void LoadTexture()
 	g_pD3Device->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1);
 	CreateTexture("Texture/ƒvƒŒƒCƒ„[.png", PLAYER_TEX);
 	CreateTexture("Texture/h‘è.png", BACKGROUND_TEX);
-	CreateTexture("Texture/‰Œ.png", PARTICLE_TEX);
-	CreateTexture("Texture/–I2.png", ENEMY_TEX);
 }
 
 void Rotation(CUSTOMVERTEX* pObj, float angle)
@@ -91,4 +89,3 @@ void DrawVertex(CHARCTER_STATE Obj, TEXTURE texture_ID, DWORD alpha)
 	g_pD3Device->SetTexture(0, g_pTexture[texture_ID]);
 	g_pD3Device->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, cv, sizeof(CUSTOMVERTEX));
 }
-
